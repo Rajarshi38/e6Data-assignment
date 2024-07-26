@@ -1,8 +1,5 @@
 import styled from "styled-components";
 
-let str = "rajarshi";
-str.substring(0);
-
 const BookCard = ({ book }) => {
   const { author, title, summary } = book;
 

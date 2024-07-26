@@ -140,7 +140,6 @@ const List = styled.ul`
   margin-top: 8px;
   display: block;
   max-height: 400px;
-  /* max-height: 400px; */
   overflow-y: scroll;
   background-color: #fff;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;

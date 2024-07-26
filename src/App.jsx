@@ -56,12 +56,16 @@ const App = () => {
         <SubmitButton type="submit">Submit</SubmitButton>
       </FormContainer>
       {/* results */}
-      <CardWrapperHeader>Books</CardWrapperHeader>
-      <CardsWrapper>
-        {books.map((book) => (
-          <BookCard key={book.id} book={book} />
-        ))}
-      </CardsWrapper>
+      {books.length > 0 ? (
+        <>
+          <CardWrapperHeader>Books</CardWrapperHeader>
+          <CardsWrapper>
+            {books.map((book) => (
+              <BookCard key={book.id} book={book} />
+            ))}
+          </CardsWrapper>
+        </>
+      ) : null}
     </MainContainer>
   );
 };

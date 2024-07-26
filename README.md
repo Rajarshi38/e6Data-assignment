@@ -13,6 +13,11 @@ Components used for now -
 - Autocomplete
 - Card
 
+### For running in local server
+
+- Clone the project and do `yarn` or `npm install`
+- then run `yarn dev` or `npm run dev` to start the local server in 3000
+
 ## Areas to improve -
 
 - could have make the autocomplete more scalable, by giving more props so that we can control how to filter and what to do when input change. Currently we have custom inputChange which we can refactor for more control and reusability.

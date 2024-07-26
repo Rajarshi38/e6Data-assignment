@@ -36,15 +36,10 @@ const CardContainer = styled.div`
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   width: 300px;
-  /* max-width: 300px; */
   padding: 15px 20px 15px 16px;
   border-radius: 6px;
   cursor: pointer;
-
   max-height: 300px;
-  /* overflow: hidden; */
-  -webkit-line-clamp: 7;
-  -webkit-box-orient: vertical;
   transition: scale 0.7s ease-in-out;
 
   &:hover {

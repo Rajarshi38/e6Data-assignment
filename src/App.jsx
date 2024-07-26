@@ -43,8 +43,6 @@ const App = () => {
     }, 600);
   };
 
-  console.log(data);
-
   return (
     <MainContainer>
       {/* form */}
@@ -108,4 +106,8 @@ const CardsWrapper = styled.div`
   padding: 20px;
   gap: 20px;
   margin-top: 32px;
+
+  @media (max-width: 940px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;

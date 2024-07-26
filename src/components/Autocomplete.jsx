@@ -109,6 +109,9 @@ const ListItem = styled.li`
   &:last-child {
     border: none;
   }
+  &:hover {
+    background-color: #d9d9d9;
+  }
 `;
 
 const AutocompleteInput = styled.input`

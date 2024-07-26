@@ -1,16 +1,18 @@
 import { useMemo, useState } from "react";
 import styled from "styled-components";
 import dataset from "./data.json";
-import Autocomplete from "./Autocomplete";
+import Autocomplete from "./components/Autocomplete";
+import BookCard from "./components/BookCard";
 
 const App = () => {
-  const [data] = useState({ ...dataset });
   const suggestions = useMemo(() => {
-    return data.summaries.map((summary) => ({
-      title: data.titles[summary.id],
+    return dataset.summaries.map((summary) => ({
+      title: dataset.titles[summary.id],
       ...summary,
     }));
-  }, [data]);
+  }, []);
+
+  const [data, setData] = useState(suggestions);
 
   const [selectedValue, setSelectedValue] = useState();
   const [books, setBooks] = useState([]);
@@ -19,9 +21,9 @@ const App = () => {
   const generateBook = (value) => {
     return {
       id: value,
-      title: data.titles[value],
-      summary: data.summaries[value].summary,
-      author: data.authors[value],
+      title: dataset.titles[value],
+      summary: dataset.summaries[value].summary,
+      author: dataset.authors[value].author,
     };
   };
 
@@ -33,6 +35,7 @@ const App = () => {
     e.preventDefault();
     const book = generateBook(selectedValue);
     setBooks((prev) => [...prev, book]);
+    setData((prev) => prev.filter((d) => d.id !== selectedValue));
     setSelectedValue("");
     setResetForm(true);
     setTimeout(() => {
@@ -40,12 +43,14 @@ const App = () => {
     }, 600);
   };
 
+  console.log(data);
+
   return (
     <MainContainer>
       {/* form */}
       <FormContainer onSubmit={onSubmit}>
         <Autocomplete
-          dataset={suggestions}
+          dataset={data}
           onSelect={onSelect}
           inputProps={{ name: "summary" }}
           reset={resetForm}
@@ -53,7 +58,11 @@ const App = () => {
         <SubmitButton type="submit">Submit</SubmitButton>
       </FormContainer>
       {/* results */}
-      <div></div>
+      <CardsWrapper>
+        {books.map((book) => (
+          <BookCard key={book.id} book={book} />
+        ))}
+      </CardsWrapper>
     </MainContainer>
   );
 };
@@ -66,6 +75,7 @@ const MainContainer = styled.main`
   background-color: #f2f2f2;
   margin: auto;
   flex-direction: column;
+  padding-bottom: 32px;
 `;
 
 const FormContainer = styled.form`
@@ -90,4 +100,12 @@ const SubmitButton = styled.button`
   &:hover {
     background-color: #0080ff;
   }
+`;
+
+const CardsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 20px;
+  gap: 20px;
+  margin-top: 32px;
 `;

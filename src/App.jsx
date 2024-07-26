@@ -56,6 +56,7 @@ const App = () => {
         <SubmitButton type="submit">Submit</SubmitButton>
       </FormContainer>
       {/* results */}
+      <CardWrapperHeader>Books</CardWrapperHeader>
       <CardsWrapper>
         {books.map((book) => (
           <BookCard key={book.id} book={book} />
@@ -103,11 +104,23 @@ const SubmitButton = styled.button`
 const CardsWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding: 20px;
-  gap: 20px;
-  margin-top: 32px;
-
-  @media (max-width: 940px) {
-    grid-template-columns: repeat(2, 1fr);
+  padding: 20px 60px;
+  gap: 26px;
+  margin-top: 15px;
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr 1fr;
   }
+  @media (max-width: 940px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const CardWrapperHeader = styled.h2`
+  text-align: center;
+  margin-top: 20px;
+  font-size: 32px;
+  font-weight: 500;
 `;

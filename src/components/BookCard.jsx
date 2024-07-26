@@ -35,15 +35,18 @@ const CardContainer = styled.div`
   background-color: #fff;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-  width: 300px;
+  /* width: 500px; */
+  width: 100%;
   padding: 15px 20px 15px 16px;
+  box-sizing: border-box;
   border-radius: 6px;
   cursor: pointer;
-  max-height: 300px;
-  transition: scale 0.7s ease-in-out;
+  max-height: 400px;
+  transition: transform 0.3s ease-in-out;
 
   &:hover {
-    /* scale: 1.3; */
+    /* scale: 1.15; */
+    transform: scale(1.2, 1.2);
   }
 `;
 
@@ -58,15 +61,14 @@ const Author = styled.span`
 `;
 
 const CardHeader = styled.div`
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   h3 {
     font-weight: 600;
-    letter-spacing: 1px;
   }
 `;
 
 const CardBody = styled.article`
-  font-size: 17px;
+  font-size: 15px;
   color: #4d4d4d;
   /* border: 1px solid red; */
   /* max-height: 250px; */

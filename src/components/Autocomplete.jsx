@@ -79,7 +79,7 @@ const Autocomplete = ({ dataset, onSelect, inputProps, reset }) => {
         onFocus={onFocus}
         value={inputValue}
         onChange={handleInputChange}
-        placeholder="Type to search"
+        placeholder="Search books"
         {...inputProps}
       />
       {showSuggestion && filteredSuggestions.length > 0 ? (
@@ -117,12 +117,15 @@ const ListItem = styled.li`
 const AutocompleteInput = styled.input`
   padding: 8px 6px;
   border: 1px solid #bfbfbf;
-  border-radius: 4px;
+  border-radius: 6px;
   width: 100%;
-  font-size: 18px;
+  font-size: 17px;
   &:focus-visible {
     outline: none;
     outline: #cccccc 1px solid;
+  }
+  &::placeholder {
+    color: #bfbfbf;
   }
 `;
 

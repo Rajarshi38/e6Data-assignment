@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import dataset from "./data.json";
 import Autocomplete from "./components/Autocomplete";
@@ -7,16 +7,17 @@ import BookCard from "./components/BookCard";
 const App = () => {
   const suggestions = useMemo(() => {
     return dataset.summaries.map((summary) => ({
-      title: dataset.titles[summary.id],
-      ...summary,
+      id: summary.id,
+      label: dataset.titles[summary.id],
+      value: summary.summary,
     }));
   }, []);
 
   const [data, setData] = useState(suggestions);
-
+  const [inputValue, setInputValue] = useState("");
   const [selectedValue, setSelectedValue] = useState();
   const [books, setBooks] = useState([]);
-  const [resetForm, setResetForm] = useState(false);
+  const [isReset, setIsReset] = useState(false);
 
   const generateBook = (value) => {
     return {
@@ -28,7 +29,17 @@ const App = () => {
   };
 
   const onSelect = (value) => {
-    setSelectedValue(value);
+    setInputValue(value.label);
+    setSelectedValue(value.id);
+  };
+
+  const resetForm = () => {
+    setInputValue("");
+    setSelectedValue("");
+    setIsReset(true);
+    setTimeout(() => {
+      setIsReset(false);
+    }, 600);
   };
 
   const onSubmit = (e) => {
@@ -36,11 +47,36 @@ const App = () => {
     const book = generateBook(selectedValue);
     setBooks((prev) => [...prev, book]);
     setData((prev) => prev.filter((d) => d.id !== selectedValue));
-    setSelectedValue("");
-    setResetForm(true);
-    setTimeout(() => {
-      setResetForm(false);
-    }, 600);
+    resetForm();
+    // setResetForm(true);
+    // setTimeout(() => {
+    //   setResetForm(false);
+    // }, 600);
+  };
+
+  const getSuggestions = useCallback(
+    (input) => {
+      const term = input.toLowerCase();
+      const matches = data
+        .map((summary) => {
+          const matchingOccurences = summary.value
+            .toLowerCase()
+            .match(new RegExp(term, "g"));
+          const count = matchingOccurences ? matchingOccurences.length : 0;
+          return {
+            ...summary,
+            count,
+          };
+        })
+        .filter((summary) => summary.count > 0)
+        .sort((a, b) => b.count - a.count);
+      return matches;
+    },
+    [data]
+  );
+
+  const onInputChange = (text) => {
+    setInputValue(text);
   };
 
   return (
@@ -50,8 +86,14 @@ const App = () => {
         <Autocomplete
           dataset={data}
           onSelect={onSelect}
-          inputProps={{ name: "summary" }}
-          reset={resetForm}
+          customFilterFn={getSuggestions}
+          inputValue={inputValue}
+          reset={isReset}
+          onInputChange={onInputChange}
+          inputProps={{
+            name: "summary",
+            placeholder: "Search books by keyword ..",
+          }}
         />
         <SubmitButton type="submit">Submit</SubmitButton>
       </FormContainer>

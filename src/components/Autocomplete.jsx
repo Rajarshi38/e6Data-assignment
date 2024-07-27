@@ -1,9 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-const Autocomplete = ({ dataset, onSelect, inputProps, reset }) => {
+const Autocomplete = ({
+  dataset,
+  onSelect,
+  inputProps,
+  reset,
+  customFilterFn,
+  onInputChange,
+  inputValue,
+}) => {
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-  const [inputValue, setInputValue] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(false);
   const autocompleteRef = useRef();
   useEffect(() => {
@@ -24,46 +31,42 @@ const Autocomplete = ({ dataset, onSelect, inputProps, reset }) => {
 
   useEffect(() => {
     if (reset) {
-      setInputValue("");
       setShowSuggestion(false);
       setFilteredSuggestions([]);
     }
   }, [reset]);
 
-  const getSuggestions = (input) => {
-    const term = input.toLowerCase();
-
-    const matches = dataset
-      .map((summary) => {
-        const matchingOccurences = summary.summary
-          .toLowerCase()
-          .match(new RegExp(term, "g"));
-        const count = matchingOccurences ? matchingOccurences.length : 0;
-        return {
-          ...summary,
-          count,
-        };
-      })
-      .filter((summary) => summary.count > 0)
-      .sort((a, b) => b.count - a.count);
-    return matches;
+  const normalFilterFn = (input) => {
+    return dataset.filter((d) =>
+      d.value.toLowerCase().includes(input.toLowerCase())
+    );
   };
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-    if (e.target.value.length === 0) {
+    const input = e.target.value;
+    onInputChange(input);
+    if (input.length === 0) {
+      setShowSuggestion(false);
       setFilteredSuggestions([]);
       return;
     }
-    const suggestions = getSuggestions(e.target.value);
-    if (suggestions.length <= 0) return;
+    let suggestions;
+    if (!!customFilterFn && typeof customFilterFn === "function") {
+      suggestions = customFilterFn(input);
+    } else {
+      suggestions = normalFilterFn(input);
+    }
+    if (suggestions.length <= 0) {
+      setShowSuggestion(false);
+      setFilteredSuggestions([]);
+      return;
+    }
     setShowSuggestion(true);
     setFilteredSuggestions(suggestions);
   };
 
   const onOptionSelect = (summary) => {
-    onSelect(summary.id);
-    setInputValue(summary.title);
+    onSelect(summary);
     setFilteredSuggestions([]);
     setShowSuggestion(false);
   };
@@ -79,14 +82,13 @@ const Autocomplete = ({ dataset, onSelect, inputProps, reset }) => {
         onFocus={onFocus}
         value={inputValue}
         onChange={handleInputChange}
-        placeholder="Search books"
         {...inputProps}
       />
       {showSuggestion && filteredSuggestions.length > 0 ? (
         <List>
           {filteredSuggestions.map((summary) => (
             <ListItem key={summary.id} onClick={() => onOptionSelect(summary)}>
-              {summary.title}
+              {summary.label}
             </ListItem>
           ))}
         </List>
